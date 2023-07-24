@@ -1,0 +1,34 @@
+Crear los diagramas de Relacionales y de Entidad-Relación para:
+1. Se quiere diseñar una base de datos relacional para almacenar información sobre los asuntos que lleva un gabinete de abogados. Cada asunto tiene un número de expediente que lo identifica, y corresponde a un solo cliente. Del asunto se debe almacenar el período (fecha de inicio y fecha de archivo o finalización), su estado (en trámite, archivado, etc.), así como los datos personales del cliente al que pertenece (DNI, nombre, dirección, etc.). Algunos asuntos son llevados por uno o varios procuradores, de los que nos interesa también los datos personales.
+
+CREATE TABLE clientes (
+	dni_cliente INT PRIMARY KEY,
+	nombre VARCHAR(150) NOT NULL,
+	direccion VARCHAR(150) NOT NULL,
+);
+
+CREATE TABLE procuradores (
+	dni_procurador INT PRIMARY KEY,
+	nombre VARCHAR(150) NOT NULL,
+	direccion VARCHAR(150) NOT NULL
+);
+
+CREATE TABLE expedientes (
+	num_exp SERIAL PRIMARY KEY,
+	fecha_inicio DATE NOT NULL,
+	fecha_final DATE,
+	estado VARCHAR(150) NOT NULL,
+	cliente INT NOT NULL,
+	FOREIGN KEY(cliente) REFERENCES clientes(dni_cliente)
+);
+
+
+CREATE TABLE consultores (
+	expediente int NOT NULL,
+	procurador int NOT NULL,
+	FOREIGN KEY(expediente) REFERENCES expedientes(num_exp),
+	FOREIGN KEY(procurador) REFERENCES procuradores(dni_procurador),
+	PRIMARY KEY(expediente, procurador) 
+/*  Composite Primary Key */
+);
+
